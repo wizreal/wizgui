@@ -1,7 +1,7 @@
 # wizgui
 gui library for love2d based on trubblegum/Gspot
 
-`
+```lua
 --window
   window1 = gui:window('Window', {50, 50, 300, 300}, nil, 'none')
   window1.minw = 128
@@ -38,4 +38,4 @@ gui library for love2d based on trubblegum/Gspot
   gui:rem(window2.resizeelement)
   window2.resizeelement = nil
   window2.titlebar.tip = 'tooltip text' --element tooltip
-`
+```
