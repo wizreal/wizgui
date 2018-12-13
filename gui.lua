@@ -84,11 +84,25 @@ function gui:new()
 	self.focus = nil
 	self.drag = nil
 end
+function gui:tracktotop_(parent)
+	if parent.children then
+		for i, child in ipairs(parent.children) do
+			if child.totop then
+				table.insert(parent.children, table.remove(parent.children, getindex(parent.children, child)))
+				self:tracktotop_(child)
+			end
+		end
+	end
+end
+-- верхние элементы проходим, помещаем totop наверх, для каждого вызываем tracktotop_
 function gui:tracktotop()
 	if self.elements then
 		for i, child in ipairs(self.elements) do
-			if child.totop then
-				table.insert(self.elements, table.remove(self.elements, getindex(self.elements, child)))
+			if not child.parent then --только у верхних элементов
+				if child.totop then
+					table.insert(self.elements, table.remove(self.elements, getindex(self.elements, child)))
+				end
+				self:tracktotop_(child)
 			end
 		end
 	end
@@ -526,6 +540,13 @@ function gui.window:new(gui, label, pos, parent)
 		end
 		if self.parent.minh and self.parent.pos.h < self.parent.minh then
 			self.parent.pos.h = self.parent.minh
+		end
+		--больше максимального размера? меняем
+		if self.parent.maxw and self.parent.pos.w > self.parent.maxw then
+			self.parent.pos.w = self.parent.maxw
+		end
+		if self.parent.maxh and self.parent.pos.h > self.parent.maxh then
+			self.parent.pos.h = self.parent.maxh
 		end
 		self.parent:positioncontrols() --размеры окна поменяли, теперь управляющие элементы расставим
 
